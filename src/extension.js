@@ -174,20 +174,22 @@ function getWebviewContent(webview, spec, title, extensionUri) {
                     }
                 }
 
-                if (typeof SwaggerUIBundle === 'undefined') {
-                    showError('SwaggerUIBundle not loaded', 'The main Swagger UI script failed to load. Please check if node_modules/swagger-ui-dist is correctly installed.');
-                    return;
-                }
+                window.addEventListener('DOMContentLoaded', function() {
+                    if (typeof SwaggerUIBundle === 'undefined') {
+                        showError('SwaggerUIBundle not loaded', 'The main Swagger UI script failed to load. Please check if node_modules/swagger-ui-dist is correctly installed.');
+                        return;
+                    }
 
-                window.ui = SwaggerUIBundle({
-                    spec: specData,
-                    dom_id: 'swagger-ui',
-                    deepLinking: true,
-                    presets: [
-                        SwaggerUIBundle.presets.apis,
-                        SwaggerUIStandalonePreset
-                    ],
-                    layout: 'StandaloneLayout'
+                    window.ui = SwaggerUIBundle({
+                        spec: specData,
+                        dom_id: '#swagger-ui',
+                        deepLinking: true,
+                        presets: [
+                            SwaggerUIBundle.presets.apis,
+                            SwaggerUIStandalonePreset
+                        ],
+                        layout: 'StandaloneLayout'
+                    });
                 });
             } catch (error) {
                 const errorBox = document.createElement('div');

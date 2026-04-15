@@ -44,8 +44,8 @@
         "command": "simple-openapi-viewer.openViewer",
         "title": "Simple OpenAPI Viewer: Open Current File",
         "icon": {
-          "light": "resources/openapi.svg",
-          "dark": "resources/openapi.svg"
+          "light": "resources/swagger.svg",
+          "dark": "resources/swagger.svg"
         }
       },
       {

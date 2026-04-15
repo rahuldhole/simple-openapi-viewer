@@ -46,4 +46,4 @@ Contributions are welcome! Please feel free to submit a Pull Request or open an 
 
 ---
 
-Made with ❤️ by [Rahul Dhole](https://github.com/rahuldhole)
+Made with ❤️ by [Rahul Dhole](https://rahuldhole.com)

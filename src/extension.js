@@ -6,6 +6,31 @@ const yaml = require('js-yaml');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
+    // Function to update context key based on document content
+    const updateContextKey = async (editor) => {
+        let isOpenApi = false;
+        if (editor && editor.document) {
+            const fileName = editor.document.fileName.toLowerCase();
+            if (fileName.endsWith('.json') || fileName.endsWith('.yaml') || fileName.endsWith('.yml')) {
+                const text = editor.document.getText();
+                // Quick check for openapi/swagger keys before full parsing
+                if (text.includes('"openapi"') || text.includes('"swagger"') || text.includes('openapi:') || text.includes('swagger:')) {
+                    isOpenApi = true;
+                }
+            }
+        }
+        vscode.commands.executeCommand('setContext', 'simple-openapi-viewer.isOpenApi', isOpenApi);
+    };
+
+    // Update on startup and on editor change
+    updateContextKey(vscode.window.activeTextEditor);
+    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(updateContextKey));
+    context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
+        if (vscode.window.activeTextEditor && e.document === vscode.window.activeTextEditor.document) {
+            updateContextKey(vscode.window.activeTextEditor);
+        }
+    }));
+
     const openViewer = vscode.commands.registerCommand('simple-openapi-viewer.openViewer', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
@@ -46,6 +71,11 @@ async function openApiViewer(context, resourceUri) {
         return vscode.window.showErrorMessage(`OpenAPI parse error: ${parseError.message}`);
     }
 
+    // Validation: Check for openapi or swagger key
+    if (!spec || (!spec.openapi && !spec.swagger)) {
+        return vscode.window.showErrorMessage('This file does not appear to be a valid OpenAPI or Swagger definition (missing "openapi" or "swagger" field).');
+    }
+
     const panel = vscode.window.createWebviewPanel(
         'simpleOpenApiViewer',
         `OpenAPI Viewer: ${path.basename(filePath)}`,
@@ -54,7 +84,7 @@ async function openApiViewer(context, resourceUri) {
             enableScripts: true,
             retainContextWhenHidden: true,
             localResourceRoots: [
-                vscode.Uri.joinPath(context.extensionUri, 'node_modules', 'swagger-ui-dist')
+                context.extensionUri
             ]
         }
     );
@@ -72,6 +102,7 @@ function getWebviewContent(webview, spec, title, extensionUri) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src ${webview.cspSource} 'unsafe-inline'; img-src ${webview.cspSource} data: https:;" />
     <title>${title}</title>
     <link rel="stylesheet" href="${swaggerCss}" />
     <style>
@@ -85,9 +116,7 @@ function getWebviewContent(webview, spec, title, extensionUri) {
         }
         #swagger-ui {
             width: 100%;
-            height: 100vh;
         }
-        /* Swagger UI overrides for Dark Theme */
         .vscode-dark .swagger-ui {
             filter: invert(88%) hue-rotate(180deg);
         }
@@ -96,22 +125,30 @@ function getWebviewContent(webview, spec, title, extensionUri) {
         }
         .error-box {
             padding: 24px;
+            margin: 20px;
             font-family: var(--vscode-editor-font-family, sans-serif);
             background: var(--vscode-inputValidation-errorBackground, #fdecea);
             color: var(--vscode-inputValidation-errorForeground, #611a15);
             border: 1px solid var(--vscode-inputValidation-errorBorder, #be1100);
+            border-radius: 4px;
         }
         pre {
             white-space: pre-wrap;
             word-wrap: break-word;
+            background: rgba(0,0,0,0.05);
+            padding: 10px;
         }
     </style>
     <script>
         window.onerror = function(msg, url, line, col, error) {
             const err = document.createElement('div');
             err.className = 'error-box';
-            err.innerHTML = '<h3>Script Error</h3><p>' + msg + '</p><small>Line: ' + line + '</small>';
+            err.innerHTML = '<h3>Browser Script Error</h3>' 
+                + '<p><strong>Message:</strong> ' + msg + '</p>'
+                + '<p><strong>File:</strong> ' + url + '</p>'
+                + '<p><strong>Line/Col:</strong> ' + line + ':' + col + '</p>';
             document.body.appendChild(err);
+            return false;
         };
     </script>
 </head>
@@ -120,41 +157,45 @@ function getWebviewContent(webview, spec, title, extensionUri) {
     <script src="${swaggerBundle}"></script>
     <script src="${swaggerPreset}"></script>
     <script>
-        const spec = ${JSON.stringify(spec)};
-
-        function showError(message, details) {
-            document.body.innerHTML = '<div class="error-box">'
-                + '<h1>OpenAPI render failed</h1>'
-                + '<p>' + message + '</p>'
-                + '<pre>' + details + '</pre>'
-                + '</div>';
-        }
-
-        if (!spec || typeof spec !== 'object') {
-            showError('Invalid OpenAPI content', 'The document did not resolve to a JSON object.');
-        } else {
+        (function() {
             try {
+                const specData = ${JSON.stringify(spec)};
+                
+                function showError(message, details) {
+                    const container = document.getElementById('swagger-ui');
+                    if (container) {
+                        container.innerHTML = '<div class="error-box">'
+                            + '<h1>OpenAPI render failed</h1>'
+                            + '<p>' + message + '</p>'
+                            + (details ? '<pre>' + details + '</pre>' : '')
+                            + '</div>';
+                    } else {
+                        document.body.innerHTML += '<div class="error-box"><h1>Critical Error</h1><p>' + message + '</p></div>';
+                    }
+                }
+
+                if (typeof SwaggerUIBundle === 'undefined') {
+                    showError('SwaggerUIBundle not loaded', 'The main Swagger UI script failed to load. Please check if node_modules/swagger-ui-dist is correctly installed.');
+                    return;
+                }
+
                 window.ui = SwaggerUIBundle({
-                    spec,
-                    dom_id: '#swagger-ui',
+                    spec: specData,
+                    dom_id: 'swagger-ui',
                     deepLinking: true,
                     presets: [
                         SwaggerUIBundle.presets.apis,
                         SwaggerUIStandalonePreset
                     ],
-                    plugins: [
-                        SwaggerUIBundle.plugins.DownloadUrl
-                    ],
-                    layout: 'StandaloneLayout',
-                    defaultModelsExpandDepth: 1,
-                    docExpansion: 'list',
-                    persistAuthorization: false,
-                    tryItOutEnabled: false
+                    layout: 'StandaloneLayout'
                 });
             } catch (error) {
-                showError('Swagger UI failed to render the OpenAPI spec.', error.message || String(error));
+                const errorBox = document.createElement('div');
+                errorBox.className = 'error-box';
+                errorBox.innerHTML = '<h3>Initialization Error</h3><pre>' + (error.stack || error.message) + '</pre>';
+                document.body.appendChild(errorBox);
             }
-        }
+        })();
     </script>
 </body>
 </html>`;

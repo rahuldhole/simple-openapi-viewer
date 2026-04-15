@@ -79,21 +79,21 @@
       "explorer/context": [
         {
           "command": "simple-openapi-viewer.openViewerFromExplorer",
-          "when": "resourceLangId == 'yaml' || resourceLangId == 'json' || resourceExtname == '.yaml' || resourceExtname == '.yml' || resourceExtname == '.json'",
+          "when": "(resourceLangId == 'yaml' || resourceLangId == 'json' || resourceExtname == '.yaml' || resourceExtname == '.yml' || resourceExtname == '.json') && simple-openapi-viewer.isOpenApi",
           "group": "1_modification"
         }
       ],
       "editor/context": [
         {
           "command": "simple-openapi-viewer.openViewer",
-          "when": "resourceLangId == 'yaml' || resourceLangId == 'json' || resourceExtname == '.yaml' || resourceExtname == '.yml' || resourceExtname == '.json'",
+          "when": "(resourceLangId == 'yaml' || resourceLangId == 'json' || resourceExtname == '.yaml' || resourceExtname == '.yml' || resourceExtname == '.json') && simple-openapi-viewer.isOpenApi",
           "group": "1_modification"
         }
       ],
       "editor/title": [
         {
           "command": "simple-openapi-viewer.openViewer",
-          "when": "resourceLangId == 'yaml' || resourceLangId == 'json' || resourceExtname == '.yaml' || resourceExtname == '.yml' || resourceExtname == '.json'",
+          "when": "(resourceLangId == 'yaml' || resourceLangId == 'json' || resourceExtname == '.yaml' || resourceExtname == '.yml' || resourceExtname == '.json') && simple-openapi-viewer.isOpenApi",
           "group": "navigation"
         }
       ]

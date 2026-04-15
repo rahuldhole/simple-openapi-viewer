@@ -65,14 +65,29 @@
       "explorer/context": [
         {
           "command": "simple-openapi-viewer.openViewerFromExplorer",
-          "when": "resourceExtname == .yaml || resourceExtname == .yml || resourceExtname == .json",
+          "when": "resourceLangId == yaml || resourceLangId == json || resourceExtname == .yaml || resourceExtname == .yml || resourceExtname == .json",
+          "group": "navigation"
+        },
+        {
+          "command": "simple-openapi-viewer.openViewerFromExplorer",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "simple-openapi-viewer.openViewer",
+          "when": "resourceLangId == yaml || resourceLangId == json || resourceExtname == .yaml || resourceExtname == .yml || resourceExtname == .json",
+          "group": "navigation"
+        },
+        {
+          "command": "simple-openapi-viewer.openViewer",
           "group": "navigation"
         }
       ],
       "editor/title": [
         {
           "command": "simple-openapi-viewer.openViewer",
-          "when": "resourceExtname == .yaml || resourceExtname == .yml || resourceExtname == .json",
+          "when": "resourceLangId == yaml || resourceLangId == json || resourceExtname == .yaml || resourceExtname == .yml || resourceExtname == .json",
           "group": "navigation"
         }
       ]

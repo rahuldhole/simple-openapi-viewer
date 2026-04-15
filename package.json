@@ -4,6 +4,7 @@
   "description": "Preview OpenAPI YAML and JSON files in a lightweight VS Code webview.",
   "version": "0.0.1",
   "publisher": "RahulDhole",
+  "private": false,
   "license": "MIT",
   "icon": "resources/icon.png",
   "keywords": [
@@ -35,11 +36,8 @@
   "activationEvents": [
     "onLanguage:yaml",
     "onLanguage:yml",
-    "onLanguage:json",
-    "onCommand:simple-openapi-viewer.openViewer",
-    "onCommand:simple-openapi-viewer.openViewerFromExplorer"
+    "onLanguage:json"
   ],
-  "packageManager": "pnpm@9.0.0",
   "main": "./dist/extension.js",
   "scripts": {
     "vscode:prepublish": "npm run compile",

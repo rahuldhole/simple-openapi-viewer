@@ -46,6 +46,7 @@
     "test": "node --test ./src/test/extension.test.js",
     "package": "rm -rf *.vsix && pnpx vsce package --no-dependencies",
     "publish": "pnpx vsce publish",
+    "publish:ovsx": "pnpx ovsx publish",
     "lint": "eslint ."
   },
   "dependencies": {

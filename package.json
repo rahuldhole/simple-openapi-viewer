@@ -24,7 +24,7 @@
   "bugs": {
     "url": "https://github.com/rahuldhole/simple-openapi-viewer/issues"
   },
-  "homepage": "https://github.com/rahuldhole/simple-openapi-viewer#readme",
+  "homepage": "https://simple-openapi-viewer.rahuldhole.com",
   "engines": {
     "vscode": "^1.74.0"
   },

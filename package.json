@@ -45,7 +45,8 @@
     "commands": [
       {
         "command": "simple-openapi-viewer.openViewer",
-        "title": "Simple OpenAPI Viewer: Open Current File",
+        "title": "Open Current File",
+        "category": "OpenAPI Viewer",
         "icon": {
           "light": "resources/swagger.svg",
           "dark": "resources/swagger.svg"
@@ -53,7 +54,20 @@
       },
       {
         "command": "simple-openapi-viewer.openViewerFromExplorer",
-        "title": "Simple OpenAPI Viewer: Open File in Viewer"
+        "title": "Open File in Viewer",
+        "category": "OpenAPI Viewer"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "simple-openapi-viewer.openViewer",
+        "displayName": "OpenAPI Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.{json,yaml,yml}"
+          }
+        ],
+        "priority": "option"
       }
     ],
     "menus": {

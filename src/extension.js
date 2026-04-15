@@ -80,24 +80,40 @@ function getWebviewContent(webview, spec, title, extensionUri) {
             padding: 0;
             width: 100%;
             min-height: 100vh;
-            background: #ffffff;
-            color: #111;
+            background-color: var(--vscode-editor-background, #ffffff);
+            color: var(--vscode-editor-foreground, #111);
         }
         #swagger-ui {
             width: 100%;
             height: 100vh;
         }
+        /* Swagger UI overrides for Dark Theme */
+        .vscode-dark .swagger-ui {
+            filter: invert(88%) hue-rotate(180deg);
+        }
+        .vscode-dark .swagger-ui .highlight-code {
+            filter: invert(100%) hue-rotate(180deg);
+        }
         .error-box {
             padding: 24px;
             font-family: var(--vscode-editor-font-family, sans-serif);
-            background: #fdecea;
-            color: #611a15;
+            background: var(--vscode-inputValidation-errorBackground, #fdecea);
+            color: var(--vscode-inputValidation-errorForeground, #611a15);
+            border: 1px solid var(--vscode-inputValidation-errorBorder, #be1100);
         }
         pre {
             white-space: pre-wrap;
             word-wrap: break-word;
         }
     </style>
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            const err = document.createElement('div');
+            err.className = 'error-box';
+            err.innerHTML = '<h3>Script Error</h3><p>' + msg + '</p><small>Line: ' + line + '</small>';
+            document.body.appendChild(err);
+        };
+    </script>
 </head>
 <body>
     <div id="swagger-ui"></div>
@@ -116,23 +132,28 @@ function getWebviewContent(webview, spec, title, extensionUri) {
 
         if (!spec || typeof spec !== 'object') {
             showError('Invalid OpenAPI content', 'The document did not resolve to a JSON object.');
-            return;
-        }
-
-        try {
-            SwaggerUIBundle({
-                spec,
-                dom_id: '#swagger-ui',
-                deepLinking: true,
-                presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
-                layout: 'StandaloneLayout',
-                defaultModelsExpandDepth: 1,
-                docExpansion: 'list',
-                persistAuthorization: false,
-                tryItOutEnabled: false
-            });
-        } catch (error) {
-            showError('Swagger UI failed to render the OpenAPI spec.', error.message || String(error));
+        } else {
+            try {
+                window.ui = SwaggerUIBundle({
+                    spec,
+                    dom_id: '#swagger-ui',
+                    deepLinking: true,
+                    presets: [
+                        SwaggerUIBundle.presets.apis,
+                        SwaggerUIStandalonePreset
+                    ],
+                    plugins: [
+                        SwaggerUIBundle.plugins.DownloadUrl
+                    ],
+                    layout: 'StandaloneLayout',
+                    defaultModelsExpandDepth: 1,
+                    docExpansion: 'list',
+                    persistAuthorization: false,
+                    tryItOutEnabled: false
+                });
+            } catch (error) {
+                showError('Swagger UI failed to render the OpenAPI spec.', error.message || String(error));
+            }
         }
     </script>
 </body>

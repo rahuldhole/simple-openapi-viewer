@@ -1,6 +1,10 @@
 # Simple OpenAPI Viewer
 
-![Simple OpenAPI Viewer Hero](resources/hero.png)
+[![Visual Studio Marketplace](https://badgen.net/vs-marketplace/v/RahulDhole.simple-openapi-viewer?color=007acc&label=Marketplace&icon=visualstudio)](https://marketplace.visualstudio.com/items?itemName=RahulDhole.simple-openapi-viewer)
+[![Open VSX Registry](https://badgen.net/open-vsx/v/RahulDhole/simple-openapi-viewer?color=33b3b3&label=Open%20VSX&icon=visualstudio)](https://open-vsx.org/extension/RahulDhole/simple-openapi-viewer)
+[![License: MIT](https://badgen.net/badge/license/MIT/yellow)](LICENSE)
+
+![Simple OpenAPI Viewer Hero](https://github.com/rahuldhole/simple-openapi-viewer/raw/HEAD/resources/hero.png)
 
 A lightweight, powerful, and theme-aware VS Code extension to preview OpenAPI YAML and JSON files using a high-fidelity Swagger UI. It works entirely offline with local assets, ensuring your API definitions never leave your environment.
 
@@ -29,7 +33,12 @@ A lightweight, powerful, and theme-aware VS Code extension to preview OpenAPI YA
 
 ## 📦 Installation
 
-Find us on the [VS Code Marketplace](https://marketplace.visualstudio.com/vscode).
+You can install the extension from your preferred marketplace:
+
+- **[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=RahulDhole.simple-openapi-viewer)**
+- **[Open VSX Registry](https://open-vsx.org/extension/RahulDhole/simple-openapi-viewer)**
+
+Alternatively, open VS Code and search for `Simple OpenAPI Viewer`.
 
 ## 🤝 Contributing
 

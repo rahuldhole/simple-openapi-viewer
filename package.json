@@ -17,6 +17,9 @@
     "Programming Languages"
   ],
   "activationEvents": [
+    "onLanguage:yaml",
+    "onLanguage:yml",
+    "onLanguage:json",
     "onCommand:simple-openapi-viewer.openViewer",
     "onCommand:simple-openapi-viewer.openViewerFromExplorer"
   ],
@@ -56,8 +59,7 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "simple-openapi-viewer.openViewer",
-          "when": "editorTextFocus"
+          "command": "simple-openapi-viewer.openViewer"
         }
       ],
       "explorer/context": [

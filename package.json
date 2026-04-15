@@ -2,7 +2,7 @@
   "name": "simple-openapi-viewer",
   "displayName": "Simple OpenAPI Viewer",
   "description": "Preview OpenAPI YAML and JSON files in a lightweight VS Code webview.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "RahulDhole",
   "private": false,
   "license": "MIT",

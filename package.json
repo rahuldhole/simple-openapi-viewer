@@ -1,0 +1,87 @@
+{
+  "name": "simple-openapi-viewer",
+  "displayName": "Simple OpenAPI Viewer",
+  "description": "Preview OpenAPI YAML and JSON files in a lightweight VS Code webview.",
+  "version": "0.0.1",
+  "publisher": "RahulDhole",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rahuldhole/simple-openapi-viewer.git"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onCommand:simple-openapi-viewer.openViewer",
+    "onCommand:simple-openapi-viewer.openViewerFromExplorer"
+  ],
+  "packageManager": "pnpm@9.0.0",
+  "main": "./src/extension.js",
+  "scripts": {
+    "dev": "pnpm install && echo 'Development environment ready. Press F5 in VS Code to start debugging.'",
+    "test": "node --test ./src/test/extension.test.js",
+    "package": "pnpx vsce package",
+    "publish": "pnpx vsce publish",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "swagger-ui-dist": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "typescript": "^5.5.0",
+    "vsce": "^2.0.0"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "simple-openapi-viewer.openViewer",
+        "title": "Simple OpenAPI Viewer: Open Current File",
+        "icon": {
+          "light": "resources/openapi.svg",
+          "dark": "resources/openapi.svg"
+        }
+      },
+      {
+        "command": "simple-openapi-viewer.openViewerFromExplorer",
+        "title": "Simple OpenAPI Viewer: Open File in Viewer"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "simple-openapi-viewer.openViewer",
+          "when": "editorTextFocus"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "simple-openapi-viewer.openViewerFromExplorer",
+          "when": "resourceExtname == .yaml || resourceExtname == .yml || resourceExtname == .json",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "simple-openapi-viewer.openViewer",
+          "when": "resourceExtname == .yaml || resourceExtname == .yml || resourceExtname == .json",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "simple-openapi-viewer.openViewer",
+        "key": "cmd+alt+o",
+        "mac": "cmd+alt+o",
+        "when": "editorTextFocus"
+      }
+    ]
+  }
+}

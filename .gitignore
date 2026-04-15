@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+.pnpm-debug.log*
+
+# Build and Packaging
+*.vsix
+out/
+dist/
+
+# VS Code specific
+.vscode-test/
+.history/
+
+# OS specific
+.DS_Store
+Thumbs.db
+logs/

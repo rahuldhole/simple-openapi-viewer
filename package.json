@@ -3,7 +3,7 @@
   "displayName": "Simple OpenAPI Viewer",
   "description": "Preview OpenAPI YAML and JSON files in a lightweight VS Code webview.",
   "version": "0.0.1",
-  "publisher": "RahulDhole",
+  "publisher": "rahuldhole",
   "license": "MIT",
   "icon": "resources/icon.png",
   "keywords": [
@@ -40,11 +40,14 @@
     "onCommand:simple-openapi-viewer.openViewerFromExplorer"
   ],
   "packageManager": "pnpm@9.0.0",
-  "main": "./src/extension.js",
+  "main": "./dist/extension.js",
   "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
     "dev": "pnpm install && echo 'Development environment ready. Press F5 in VS Code to start debugging.'",
     "test": "node --test ./src/test/extension.test.js",
-    "package": "rm -rf *.vsix && pnpx vsce package --no-dependencies",
+    "package": "rm -rf *.vsix && npm run compile && pnpx vsce package --no-dependencies",
     "publish": "pnpx vsce publish",
     "publish:ovsx": "pnpx ovsx publish",
     "lint": "eslint ."
@@ -56,6 +59,7 @@
   "devDependencies": {
     "@types/vscode": "^1.74.0",
     "@vscode/vsce": "^3.8.1",
+    "esbuild": "^0.28.0",
     "eslint": "^10.2.0"
   },
   "contributes": {

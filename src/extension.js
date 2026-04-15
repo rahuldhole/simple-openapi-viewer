@@ -94,9 +94,9 @@ async function openApiViewer(context, resourceUri) {
 }
 
 function getWebviewContent(webview, spec, title, extensionUri) {
-    const swaggerCss = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'node_modules', 'swagger-ui-dist', 'swagger-ui.css'));
-    const swaggerBundle = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'node_modules', 'swagger-ui-dist', 'swagger-ui-bundle.js'));
-    const swaggerPreset = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'node_modules', 'swagger-ui-dist', 'swagger-ui-standalone-preset.js'));
+    const swaggerCss = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'swagger-ui', 'swagger-ui.css'));
+    const swaggerBundle = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'swagger-ui', 'swagger-ui-bundle.js'));
+    const swaggerPreset = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'swagger-ui', 'swagger-ui-standalone-preset.js'));
 
     return `<!DOCTYPE html>
 <html lang="en">

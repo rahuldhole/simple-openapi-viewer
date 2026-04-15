@@ -4,10 +4,13 @@
 .vscodeignore
 **/*.map
 **/*.ts
-node_modules/@types/**
-node_modules/.bin/**
+node_modules/**
+src/**
 src/test/**
 samples/**
 pnpm-lock.yaml
 logs/**
 *.vsix
+eslint.config.js
+package-lock.json
+.eslintrc.json

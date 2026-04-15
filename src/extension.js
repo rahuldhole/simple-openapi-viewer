@@ -106,56 +106,28 @@ function getWebviewContent(webview, spec, title, extensionUri) {
     <title>${title}</title>
     <link rel="stylesheet" href="${swaggerCss}" />
     <style>
-        :root {
-            --accent-color: #007acc;
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: var(--vscode-editor-background, #fafafa); 
+            font-family: var(--vscode-font-family, sans-serif);
         }
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100vh;
-            background-color: var(--vscode-editor-background, #ffffff);
-            font-family: var(--vscode-font-family, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif);
-        }
+        #swagger-ui { width: 100%; }
         
-        #swagger-ui {
-            width: 100%;
-        }
-
-        /* Hide the Swagger UI header/topbar */
-        .swagger-ui .topbar {
-            display: none !important;
-        }
-
-        /* Standardize spacing */
-        .swagger-ui .info {
-            margin: 20px 0 !important;
-        }
-
-        /* Premium Dark Mode Overrides */
+        /* Standard sharp filter for dark mode */
         .vscode-dark .swagger-ui {
-            filter: invert(88%) hue-rotate(180deg);
-        }
-        /* Fix images and specific blocks that shouldn't be fully inverted/hue-rotated back and forth */
-        .vscode-dark .swagger-ui img, 
-        .vscode-dark .swagger-ui .highlight-code,
-        .vscode-dark .swagger-ui .microlight {
-            filter: invert(100%) hue-rotate(180deg);
+            filter: invert(1) hue-rotate(180deg);
+            backface-visibility: hidden;
         }
         
-        /* Better Scrollbars for Webview */
-        ::-webkit-scrollbar {
-            width: 10px;
+        /* Protect code and images from double inversion */
+        .vscode-dark .swagger-ui img, 
+        .vscode-dark .swagger-ui .highlight-code {
+            filter: invert(1) hue-rotate(180deg);
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--vscode-scrollbarSlider-background, rgba(121, 121, 121, 0.4));
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--vscode-scrollbarSlider-activeBackground, rgba(121, 121, 121, 0.6));
-        }
+
+        /* Essential Header Hide */
+        .swagger-ui .topbar { display: none !important; }
 
         .error-box {
             padding: 24px;

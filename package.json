@@ -65,8 +65,8 @@
         "title": "Open Current File",
         "category": "OpenAPI Viewer",
         "icon": {
-          "light": "resources/swagger.svg",
-          "dark": "resources/swagger.svg"
+          "light": "resources/icon.svg",
+          "dark": "resources/icon-dark.svg"
         }
       },
       {

@@ -1,23 +1,40 @@
 # Simple OpenAPI Viewer
 
-A minimal VS Code extension that displays OpenAPI YAML or JSON files in a lightweight Swagger UI webview. The viewer uses local OpenAPI assets installed as dependencies, so it works without relying on CDN scripts.
+![Simple OpenAPI Viewer Hero](resources/hero.png)
 
-## Features
+A lightweight, powerful, and theme-aware VS Code extension to preview OpenAPI YAML and JSON files using a high-fidelity Swagger UI. It works entirely offline with local assets, ensuring your API definitions never leave your environment.
 
-- Open the current editor file in the OpenAPI viewer
-- Right-click supported `.yaml`, `.yml`, or `.json` files in Explorer and choose **Open File in Viewer**
-- Tab title button appears for supported files
-- Keyboard shortcut: `Cmd+Alt+O`
+## ✨ Features
 
-## Usage
+- **High-Fidelity Rendering**: Full Swagger UI integration for a professional experience.
+- **Theme Aware**: Seamlessly adjusts to your VS Code dark and light themes.
+- **Offline Ready**: No CDN dependencies; uses local assets for maximum privacy and speed.
+- **Flexible Access**:
+  - Command Palette (`Cmd+Alt+O` / `Ctrl+Alt+O`)
+  - Editor title button (quick-access icon)
+  - Explorer context menu (right-click any YAML/JSON)
+  - Editor context menu
+- **Auto-Detection**: Smartly recognizes OpenAPI/Swagger files to stay out of your way when not needed.
 
-1. Open a `.yaml`, `.yml`, or `.json` OpenAPI file in VS Code.
-2. Use the command palette and run **Simple OpenAPI Viewer: Open Current File**.
-3. Or right-click the file in Explorer and choose **Simple OpenAPI Viewer: Open File in Viewer**.
-4. The viewer opens in a new tab and shows the API documentation.
+## 🚀 Getting Started
 
-## Development
+1. Open any `.yaml`, `.yml`, or `.json` OpenAPI/Swagger file.
+2. Click the **OpenAPI Viewer** icon in the editor title bar (top-right).
+3. Alternatively, use the command palette (`Cmd+Shift+P`) and search for **Simple OpenAPI Viewer: Open Current File**.
 
-- Run `pnpm install` in `simple-openapi-viewer`
-- Press `F5` in VS Code to launch the extension in the Extension Development Host
-- Package with `pnpx vsce package`
+## 🛠️ Requirements
+
+- VS Code version 1.74.0 or higher.
+- A valid OpenAPI (2.0, 3.0, 3.1) or Swagger definition file.
+
+## 📦 Installation
+
+Find us on the [VS Code Marketplace](https://marketplace.visualstudio.com/vscode).
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request or open an issue on [GitHub](https://github.com/rahuldhole/simple-openapi-viewer).
+
+---
+
+Made with ❤️ by [Rahul Dhole](https://github.com/rahuldhole)

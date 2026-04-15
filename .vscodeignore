@@ -1,0 +1,13 @@
+.vscode/**
+.git/**
+.gitignore
+.vscodeignore
+**/*.map
+**/*.ts
+node_modules/@types/**
+node_modules/.bin/**
+src/test/**
+samples/**
+pnpm-lock.yaml
+logs/**
+*.vsix

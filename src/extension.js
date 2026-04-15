@@ -60,6 +60,7 @@ async function openApiViewer(context, resourceUri) {
     try {
         fileBytes = await vscode.workspace.fs.readFile(resourceUri);
     } catch (err) {
+        console.error('Failed to read file:', err);
         return vscode.window.showErrorMessage('Unable to read OpenAPI file.');
     }
 

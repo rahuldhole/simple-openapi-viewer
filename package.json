@@ -5,16 +5,32 @@
   "version": "0.0.1",
   "publisher": "RahulDhole",
   "license": "MIT",
+  "icon": "resources/icon.png",
+  "keywords": [
+    "openapi",
+    "swagger",
+    "api",
+    "viewer",
+    "documentation",
+    "yaml",
+    "json",
+    "rest"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/rahuldhole/simple-openapi-viewer.git"
   },
+  "bugs": {
+    "url": "https://github.com/rahuldhole/simple-openapi-viewer/issues"
+  },
+  "homepage": "https://github.com/rahuldhole/simple-openapi-viewer#readme",
   "engines": {
     "vscode": "^1.74.0"
   },
   "categories": [
-    "Other",
-    "Programming Languages"
+    "Visualization",
+    "Programming Languages",
+    "Other"
   ],
   "activationEvents": [
     "onLanguage:yaml",
@@ -38,6 +54,7 @@
   },
   "devDependencies": {
     "@types/vscode": "^1.74.0",
+    "eslint": "^10.2.0",
     "typescript": "^5.5.0",
     "vsce": "^2.0.0"
   },
@@ -79,7 +96,7 @@
       "explorer/context": [
         {
           "command": "simple-openapi-viewer.openViewerFromExplorer",
-          "when": "(resourceLangId == 'yaml' || resourceLangId == 'json' || resourceExtname == '.yaml' || resourceExtname == '.yml' || resourceExtname == '.json') && simple-openapi-viewer.isOpenApi",
+          "when": "resourceLangId == 'yaml' || resourceLangId == 'json' || resourceExtname == '.yaml' || resourceExtname == '.yml' || resourceExtname == '.json'",
           "group": "1_modification"
         }
       ],

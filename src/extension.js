@@ -11,7 +11,13 @@ function addWebview(uri, panel) {
     }
     activeWebviews.get(key).add(panel);
     panel.onDidDispose(() => {
-        activeWebviews.get(key).delete(panel);
+        const panels = activeWebviews.get(key);
+        if (panels) {
+            panels.delete(panel);
+            if (panels.size === 0) {
+                activeWebviews.delete(key);
+            }
+        }
     });
 }
 
@@ -144,6 +150,15 @@ async function openApiViewer(context, resourceUri) {
     // Validation
     if (!isOpenApi(fileContents)) {
         return vscode.window.showErrorMessage('This file does not appear to be a valid OpenAPI or Swagger definition (missing "openapi" or "swagger" field).');
+    }
+
+    const key = resourceUri.toString();
+    if (activeWebviews.has(key)) {
+        for (const existingPanel of activeWebviews.get(key)) {
+            // Reveal the first existing panel we find
+            existingPanel.reveal(vscode.ViewColumn.Active);
+            return;
+        }
     }
 
     const panel = vscode.window.createWebviewPanel(
@@ -280,6 +295,12 @@ function getWebviewContent(webview, spec, title, extensionUri) {
                     }
 
                     console.log('Creating SwaggerUI instance...');
+                    // Clear the container in case this is a re-render
+                    const container = document.getElementById('swagger-ui');
+                    if (container) {
+                        container.innerHTML = '';
+                    }
+
                     window.ui = SwaggerUIBundle({
                         spec: specData,
                         dom_id: '#swagger-ui',
@@ -303,6 +324,7 @@ function getWebviewContent(webview, spec, title, extensionUri) {
 
                 window.addEventListener('message', event => {
                     const message = event.data;
+                    console.log('Received message:', message);
                     if (message.type === 'update') {
                         initSwagger(message.spec);
                     }

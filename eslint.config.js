@@ -16,11 +16,12 @@ module.exports = [
                 __dirname: "readonly",
                 __filename: "readonly",
                 vscode: "readonly",
-                console: "readonly"
+                console: "readonly",
+                TextDecoder: "readonly"
             }
         }
     },
     {
-        ignores: ["src/test/**"]
+        ignores: ["src/test/**", "dist/**"]
     }
 ];

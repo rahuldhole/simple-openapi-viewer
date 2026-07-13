@@ -1,4 +1,4 @@
-const path = require('path');
+
 const vscode = require('vscode');
 const yaml = require('js-yaml');
 
@@ -77,7 +77,7 @@ function activate(context) {
                 localResourceRoots: [context.extensionUri]
             };
 
-            webviewPanel.webview.html = getWebviewContent(webviewPanel.webview, spec, path.basename(document.fileName), context.extensionUri);
+            webviewPanel.webview.html = getWebviewContent(webviewPanel.webview, spec, basename(document.fileName), context.extensionUri);
         }
     };
 
@@ -103,7 +103,7 @@ async function openApiViewer(context, resourceUri) {
         return vscode.window.showErrorMessage('Unable to read OpenAPI file.');
     }
 
-    const fileContents = Buffer.from(fileBytes).toString('utf8');
+    const fileContents = new TextDecoder().decode(fileBytes);
     let spec;
     try {
         spec = parseSpec(fileContents);
@@ -118,7 +118,7 @@ async function openApiViewer(context, resourceUri) {
 
     const panel = vscode.window.createWebviewPanel(
         'simpleOpenApiViewer',
-        `OpenAPI Viewer: ${path.basename(filePath)}`,
+        `OpenAPI Viewer: ${basename(filePath)}`,
         vscode.ViewColumn.One,
         {
             enableScripts: true,
@@ -129,7 +129,7 @@ async function openApiViewer(context, resourceUri) {
         }
     );
 
-    panel.webview.html = getWebviewContent(panel.webview, spec, path.basename(filePath), context.extensionUri);
+    panel.webview.html = getWebviewContent(panel.webview, spec, basename(filePath), context.extensionUri);
 }
 
 function getWebviewContent(webview, spec, title, extensionUri) {
@@ -306,6 +306,11 @@ function parseSpec(text) {
 }
 
 function deactivate() {}
+
+function basename(filePath) {
+    if (!filePath) return '';
+    return filePath.split(/[\\\\/]/).pop();
+}
 
 module.exports = {
     activate,

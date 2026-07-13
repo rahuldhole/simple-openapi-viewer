@@ -163,7 +163,7 @@ async function openApiViewer(context, resourceUri) {
 
     const panel = vscode.window.createWebviewPanel(
         'simpleOpenApiViewer',
-        `OpenAPI Viewer: ${basename(filePath)}`,
+        basename(filePath),
         vscode.ViewColumn.One,
         {
             enableScripts: true,
@@ -173,6 +173,11 @@ async function openApiViewer(context, resourceUri) {
             ]
         }
     );
+
+    panel.iconPath = {
+        light: vscode.Uri.joinPath(context.extensionUri, 'resources', 'icon.svg'),
+        dark: vscode.Uri.joinPath(context.extensionUri, 'resources', 'icon-dark.svg')
+    };
 
     addWebview(resourceUri, panel);
 

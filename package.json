@@ -39,10 +39,15 @@
     "onLanguage:json"
   ],
   "main": "./dist/extension.js",
+  "browser": "./dist/web/extension.js",
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
-    "watch": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "compile": "npm run compile-node && npm run compile-web",
+    "compile-node": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "compile-web": "esbuild ./src/extension.js --bundle --outfile=dist/web/extension.js --external:vscode --format=cjs --platform=browser",
+    "watch": "npm run watch-node & npm run watch-web",
+    "watch-node": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "watch-web": "esbuild ./src/extension.js --bundle --outfile=dist/web/extension.js --external:vscode --format=cjs --platform=browser --watch",
     "dev": "pnpm install && echo 'Development environment ready. Press F5 in VS Code to start debugging.'",
     "test": "node --test ./src/test/extension.test.js",
     "package": "rm -rf *.vsix && npm run compile && pnpx vsce package --no-dependencies",

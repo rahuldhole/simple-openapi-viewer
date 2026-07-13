@@ -1,3 +1,16 @@
+<head>
+  <meta name="description" content="A lightweight, powerful, and theme-aware VS Code extension to preview OpenAPI YAML and JSON files using a high-fidelity Swagger UI.">
+  <meta property="og:title" content="Simple OpenAPI Viewer">
+  <meta property="og:description" content="A lightweight, powerful, and theme-aware VS Code extension to preview OpenAPI YAML and JSON files using a high-fidelity Swagger UI.">
+  <meta property="og:image" content="https://github.com/rahuldhole/simple-openapi-viewer/raw/HEAD/resources/hero.png">
+  <meta property="og:url" content="https://simple-openapi-viewer.rahuldhole.com/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Simple OpenAPI Viewer">
+  <meta name="twitter:description" content="A lightweight, powerful, and theme-aware VS Code extension to preview OpenAPI YAML and JSON files using a high-fidelity Swagger UI.">
+  <meta name="twitter:image" content="https://github.com/rahuldhole/simple-openapi-viewer/raw/HEAD/resources/hero.png">
+</head>
+
 # Simple OpenAPI Viewer
 
 [![Visual Studio Marketplace](https://badgen.net/vs-marketplace/v/RahulDhole.simple-openapi-viewer?color=007acc&label=Marketplace&icon=visualstudio)](https://marketplace.visualstudio.com/items?itemName=RahulDhole.simple-openapi-viewer)

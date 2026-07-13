@@ -1,6 +1,25 @@
-const path = require('path');
+
 const vscode = require('vscode');
 const yaml = require('js-yaml');
+
+const activeWebviews = new Map();
+
+function addWebview(uri, panel) {
+    const key = uri.toString();
+    if (!activeWebviews.has(key)) {
+        activeWebviews.set(key, new Set());
+    }
+    activeWebviews.get(key).add(panel);
+    panel.onDidDispose(() => {
+        const panels = activeWebviews.get(key);
+        if (panels) {
+            panels.delete(panel);
+            if (panels.size === 0) {
+                activeWebviews.delete(key);
+            }
+        }
+    });
+}
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -29,6 +48,21 @@ function activate(context) {
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
         if (vscode.window.activeTextEditor && e.document === vscode.window.activeTextEditor.document) {
             updateContextKey(vscode.window.activeTextEditor);
+        }
+        
+        // Live reload webviews
+        const key = e.document.uri.toString();
+        if (activeWebviews.has(key)) {
+            try {
+                const spec = parseSpec(e.document.getText());
+                if (spec) {
+                    activeWebviews.get(key).forEach(panel => {
+                        panel.webview.postMessage({ type: 'update', spec });
+                    });
+                }
+            } catch (err) {
+                // Ignore parse errors while typing
+            }
         }
     }));
 
@@ -77,7 +111,9 @@ function activate(context) {
                 localResourceRoots: [context.extensionUri]
             };
 
-            webviewPanel.webview.html = getWebviewContent(webviewPanel.webview, spec, path.basename(document.fileName), context.extensionUri);
+            addWebview(document.uri, webviewPanel);
+            
+            webviewPanel.webview.html = getWebviewContent(webviewPanel.webview, spec, basename(document.fileName), context.extensionUri);
         }
     };
 
@@ -103,7 +139,7 @@ async function openApiViewer(context, resourceUri) {
         return vscode.window.showErrorMessage('Unable to read OpenAPI file.');
     }
 
-    const fileContents = Buffer.from(fileBytes).toString('utf8');
+    const fileContents = new TextDecoder().decode(fileBytes);
     let spec;
     try {
         spec = parseSpec(fileContents);
@@ -116,9 +152,18 @@ async function openApiViewer(context, resourceUri) {
         return vscode.window.showErrorMessage('This file does not appear to be a valid OpenAPI or Swagger definition (missing "openapi" or "swagger" field).');
     }
 
+    const key = resourceUri.toString();
+    if (activeWebviews.has(key)) {
+        for (const existingPanel of activeWebviews.get(key)) {
+            // Reveal the first existing panel we find
+            existingPanel.reveal(vscode.ViewColumn.Active);
+            return;
+        }
+    }
+
     const panel = vscode.window.createWebviewPanel(
         'simpleOpenApiViewer',
-        `OpenAPI Viewer: ${path.basename(filePath)}`,
+        basename(filePath),
         vscode.ViewColumn.One,
         {
             enableScripts: true,
@@ -129,7 +174,14 @@ async function openApiViewer(context, resourceUri) {
         }
     );
 
-    panel.webview.html = getWebviewContent(panel.webview, spec, path.basename(filePath), context.extensionUri);
+    panel.iconPath = {
+        light: vscode.Uri.joinPath(context.extensionUri, 'resources', 'icon.svg'),
+        dark: vscode.Uri.joinPath(context.extensionUri, 'resources', 'icon-dark.svg')
+    };
+
+    addWebview(resourceUri, panel);
+
+    panel.webview.html = getWebviewContent(panel.webview, spec, basename(filePath), context.extensionUri);
 }
 
 function getWebviewContent(webview, spec, title, extensionUri) {
@@ -227,7 +279,7 @@ function getWebviewContent(webview, spec, title, extensionUri) {
         (function() {
             console.log('OpenAPI Viewer initializing...');
             try {
-                const specData = ${specJson};
+                let currentSpec = ${specJson};
                 
                 function showError(message, details) {
                     const container = document.getElementById('swagger-ui');
@@ -240,7 +292,7 @@ function getWebviewContent(webview, spec, title, extensionUri) {
                     }
                 }
 
-                function initSwagger() {
+                function initSwagger(specData) {
                     console.log('SwaggerUIBundle type:', typeof SwaggerUIBundle);
                     if (typeof SwaggerUIBundle === 'undefined') {
                         showError('SwaggerUIBundle not loaded', 'The main Swagger UI script failed to load. Please check if node_modules/swagger-ui-dist is correctly installed.');
@@ -248,6 +300,12 @@ function getWebviewContent(webview, spec, title, extensionUri) {
                     }
 
                     console.log('Creating SwaggerUI instance...');
+                    // Clear the container in case this is a re-render
+                    const container = document.getElementById('swagger-ui');
+                    if (container) {
+                        container.innerHTML = '';
+                    }
+
                     window.ui = SwaggerUIBundle({
                         spec: specData,
                         dom_id: '#swagger-ui',
@@ -264,10 +322,18 @@ function getWebviewContent(webview, spec, title, extensionUri) {
                 }
 
                 if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', initSwagger);
+                    document.addEventListener('DOMContentLoaded', () => initSwagger(currentSpec));
                 } else {
-                    initSwagger();
+                    initSwagger(currentSpec);
                 }
+
+                window.addEventListener('message', event => {
+                    const message = event.data;
+                    console.log('Received message:', message);
+                    if (message.type === 'update') {
+                        initSwagger(message.spec);
+                    }
+                });
             } catch (error) {
                 console.error('Initialization error:', error);
                 const errorBox = document.createElement('div');
@@ -306,6 +372,11 @@ function parseSpec(text) {
 }
 
 function deactivate() {}
+
+function basename(filePath) {
+    if (!filePath) return '';
+    return filePath.split(/[\\\\/]/).pop();
+}
 
 module.exports = {
     activate,

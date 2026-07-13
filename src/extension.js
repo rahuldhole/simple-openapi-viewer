@@ -60,7 +60,7 @@ function activate(context) {
                         panel.webview.postMessage({ type: 'update', spec });
                     });
                 }
-            } catch (err) {
+            } catch {
                 // Ignore parse errors while typing
             }
         }
@@ -90,7 +90,7 @@ function activate(context) {
 
     // Handle "Open With..." (Custom Editor)
     const provider = {
-        async resolveCustomTextEditor(document, webviewPanel, token) {
+        async resolveCustomTextEditor(document, webviewPanel) {
             const fileContents = document.getText();
             let spec;
             try {

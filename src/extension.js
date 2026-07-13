@@ -2,6 +2,19 @@
 const vscode = require('vscode');
 const yaml = require('js-yaml');
 
+const activeWebviews = new Map();
+
+function addWebview(uri, panel) {
+    const key = uri.toString();
+    if (!activeWebviews.has(key)) {
+        activeWebviews.set(key, new Set());
+    }
+    activeWebviews.get(key).add(panel);
+    panel.onDidDispose(() => {
+        activeWebviews.get(key).delete(panel);
+    });
+}
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -29,6 +42,21 @@ function activate(context) {
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
         if (vscode.window.activeTextEditor && e.document === vscode.window.activeTextEditor.document) {
             updateContextKey(vscode.window.activeTextEditor);
+        }
+        
+        // Live reload webviews
+        const key = e.document.uri.toString();
+        if (activeWebviews.has(key)) {
+            try {
+                const spec = parseSpec(e.document.getText());
+                if (spec) {
+                    activeWebviews.get(key).forEach(panel => {
+                        panel.webview.postMessage({ type: 'update', spec });
+                    });
+                }
+            } catch (err) {
+                // Ignore parse errors while typing
+            }
         }
     }));
 
@@ -77,6 +105,8 @@ function activate(context) {
                 localResourceRoots: [context.extensionUri]
             };
 
+            addWebview(document.uri, webviewPanel);
+            
             webviewPanel.webview.html = getWebviewContent(webviewPanel.webview, spec, basename(document.fileName), context.extensionUri);
         }
     };
@@ -128,6 +158,8 @@ async function openApiViewer(context, resourceUri) {
             ]
         }
     );
+
+    addWebview(resourceUri, panel);
 
     panel.webview.html = getWebviewContent(panel.webview, spec, basename(filePath), context.extensionUri);
 }
@@ -227,7 +259,7 @@ function getWebviewContent(webview, spec, title, extensionUri) {
         (function() {
             console.log('OpenAPI Viewer initializing...');
             try {
-                const specData = ${specJson};
+                let currentSpec = ${specJson};
                 
                 function showError(message, details) {
                     const container = document.getElementById('swagger-ui');
@@ -240,7 +272,7 @@ function getWebviewContent(webview, spec, title, extensionUri) {
                     }
                 }
 
-                function initSwagger() {
+                function initSwagger(specData) {
                     console.log('SwaggerUIBundle type:', typeof SwaggerUIBundle);
                     if (typeof SwaggerUIBundle === 'undefined') {
                         showError('SwaggerUIBundle not loaded', 'The main Swagger UI script failed to load. Please check if node_modules/swagger-ui-dist is correctly installed.');
@@ -264,10 +296,17 @@ function getWebviewContent(webview, spec, title, extensionUri) {
                 }
 
                 if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', initSwagger);
+                    document.addEventListener('DOMContentLoaded', () => initSwagger(currentSpec));
                 } else {
-                    initSwagger();
+                    initSwagger(currentSpec);
                 }
+
+                window.addEventListener('message', event => {
+                    const message = event.data;
+                    if (message.type === 'update') {
+                        initSwagger(message.spec);
+                    }
+                });
             } catch (error) {
                 console.error('Initialization error:', error);
                 const errorBox = document.createElement('div');

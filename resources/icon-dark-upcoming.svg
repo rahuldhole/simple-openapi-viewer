@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <!-- Saturated, deeper emerald gradient to prevent washout on white -->
+    <linearGradient id="light-green-hex" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#58BA13" />
+      <stop offset="100%" stop-color="#287D06" />
+    </linearGradient>
+  </defs>
+
+  <!-- Hexagon Silhouette with High-Contrast Perimeter Stroke -->
+  <polygon
+    points="64,12 109,38 109,90 64,116 19,90 19,38"
+    fill="url(#light-green-hex)"
+    stroke="#1A5603"
+    stroke-width="5"
+    stroke-linejoin="round"
+  />
+
+  <!-- Deep Midnight Forest Crosshairs -->
+  <g stroke="#061A09" stroke-width="4.5" stroke-linecap="round">
+    <line x1="64" y1="26" x2="64" y2="43" />
+    <line x1="64" y1="85" x2="64" y2="102" />
+    <line x1="32" y1="64" x2="49" y2="64" />
+    <line x1="79" y1="64" x2="96" y2="64" />
+  </g>
+
+  <!-- Clean Alabaster Reticle -->
+  <circle cx="64" cy="64" r="14.5" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-dasharray="5.5 4" />
+
+  <!-- Core Pin -->
+  <circle cx="64" cy="64" r="4.5" fill="#061A09" />
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <!-- Punchy, luminous gradient that pops against dark editor canvases -->
+    <linearGradient id="dark-green-hex" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#90F632" />
+      <stop offset="100%" stop-color="#46A70A" />
+    </linearGradient>
+  </defs>
+
+  <!-- Hexagon Silhouette with Dark Anchoring Edge -->
+  <polygon
+    points="64,12 109,38 109,90 64,116 19,90 19,38"
+    fill="url(#dark-green-hex)"
+    stroke="#2B6E05"
+    stroke-width="4.5"
+    stroke-linejoin="round"
+  />
+
+  <!-- High-Density Obsidian Pine Crosshairs -->
+  <g stroke="#08200C" stroke-width="4.5" stroke-linecap="round">
+    <line x1="64" y1="26" x2="64" y2="43" />
+    <line x1="64" y1="85" x2="64" y2="102" />
+    <line x1="32" y1="64" x2="49" y2="64" />
+    <line x1="79" y1="64" x2="96" y2="64" />
+  </g>
+
+  <!-- Luminous White Target Reticle -->
+  <circle cx="64" cy="64" r="14.5" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-dasharray="5.5 4" />
+
+  <!-- Obsidian Core Pin -->
+  <circle cx="64" cy="64" r="4.5" fill="#08200C" />
+</svg>
